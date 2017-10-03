@@ -35,5 +35,5 @@ RUN set -x \
 WORKDIR /usr/local/src/xmr-stak-cpu/bin
 RUN curl https://raw.githubusercontent.com/fallen90/docker-xmr-stak-cpu/master/config.txt -o config.txt \
     && ls -alh \
-    && echo $PWD
+    && echo $(lscpu)
 CMD ["xmr-stak-cpu"]
