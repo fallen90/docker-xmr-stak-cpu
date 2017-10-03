@@ -28,16 +28,10 @@ RUN set -x \
     && sed -i 's/constexpr double fDevDonationLevel.*/constexpr double fDevDonationLevel = 0.0;/' donate-level.h \
     && cd build \
     && cmake .. \
+    && echo "PROCESSORS: $(nproc)" \
     && make -j$(nproc) \
-    && cp bin/xmr-stak-cpu /usr/local/bin/ \
-    && sed -r \
-        -e 's/^("pool_address" : ).*,/\1"xmr.mypool.online:3333",/' \
-        -e 's/^("wallet_address" : ).*,/\1"49TfoHGd6apXxNQTSHrMBq891vH6JiHmZHbz5Vx36nLRbz6WgcJunTtgcxnoG6snKFeGhAJB5LjyAEnvhBgCs5MtEgML3LU",/' \
-        -e 's/^("pool_password" : ).*,/\1"docker-xmr-stak-cpu:x",/' \
-        ../config.txt > /usr/local/etc/config.txt \
-    \
-    && rm -r /usr/local/src/xmr-stak-cpu \
-    && apt-get -qq --auto-remove purge $buildDeps
+    && cp bin/xmr-stak-cpu /usr/local/bin/
 
-ENTRYPOINT ["xmr-stak-cpu"]
-CMD ["/usr/local/etc/config.txt"]
+WORKDIR /usr/local/src/xmr-stak-cpu/bin
+COPY config.txt .
+CMD ["./xmr-stak-cpu"]
